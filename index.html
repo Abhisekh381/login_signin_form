@@ -31,7 +31,7 @@
                     </label>
                     <a class="text-blue-700 hover:underline" href="#">Forgot Password</a>
                 </div>
-                <button type="submit" class="w-[100%] py-3 rounded-lg bg-gray-700 hover:bg-gray-800 font-medium transition duration-200 text-white">Sign in</button>
+                <button type="submit" class="w-[100%] py-3 rounded-lg bg-gray-700 hover:bg-gray-800 font-medium transition duration-200 text-white onclick="openDash()">Sign in</button>
                 <div class="text-center text-sm my-3">
                     <p>Demo Credentials:</p>
                     <p>Admin: admin@school.com / admin123</p>
@@ -98,10 +98,14 @@
             x.style.left = "0";
             y.style.left = "100%"
         }
+        function openDash() {
+            window.location.href = "dashboard.html";    
+        }
     </script>
 </body>
 
 </html>
+
 
 
 
