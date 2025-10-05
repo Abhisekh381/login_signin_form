@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./output.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <title>Attended Smart Attendance system</title>
+</head>
+<body class="bg-blue-300">
+    <div class="flex w-[100%] min-h-screen sm:my-0 justify-center items-center content-center relative px-4">
+        <div class="lg:w-1/3 2xl:w-1/4 w-[95%] mt-3 mb-3 p-10 bg-white text-center rounded-xl flex flex-col justify-center align-center shadow-lg shadow-slate-500">
+            <div class="bg-yellow-100 rounded-xl shadow-lg shadow-slate-400 w-[8rem] h-auto text-2xl font-bold mx-auto text-sky-600 text-center">
+                Attend<span class="text-orange-600">Ed</span>
+            </div>                                        
+            <div class="mb-7">
+                <h2 class="sm:text-4xl text-3xl font-bold text-blue-800 mt-2">School Attendance</h2>
+                <h4 class="mt-1 text-sm sm:text-base">Smart Attendance Management</h4>
+            </div>
+            <div class="flex flex-col relative overflow-hidden mt-2">
+                <form id="signin" action="" class="flex flex-col space-y-1 relative w-full left-[0]">
+                <label for="email" class="text-sm font-medium text-start pb-0.5 mt-2">Email</label>
+                <input id="email" type="email" placeholder="Enter your email" class="block border rounded-lg px-2 py-2 bg-blue-100 border-slate-400 hover:bg-blue-50 focus:bg-blue-50" required>
+                <label for="password" class="text-sm font-medium text-start pb-0.5 mt-2">Password</label>
+                <div class="relative">
+                    <input id="password" type="password" placeholder="Enter your password"
+                        class="block w-full border rounded-lg px-2 py-2 bg-blue-100 border-slate-400 hover:bg-blue-50 focus:bg-blue-50 pr-10" required>
+                    <span class="absolute right-3 top-3 cursor-pointer text-slate-600" onclick="togglePassword('password', this)">
+                        <i class="fa-solid fa-eye"></i>
+                    </span>
+                </div>
+
+
+                <div class="flex justify-between text-sm items-center my-5">
+                    <label class="flex items-center" for="">
+                        <input class="mr-2" type="checkbox">
+                        <span class="text-slate-800">Remember me</span>
+                    </label>
+                    <a class="text-blue-700 hover:underline" href="#">Forgot Password</a>
+                </div>
+                <button type="submit" class="w-[100%] py-3 rounded-lg bg-gray-700 hover:bg-gray-800 font-medium transition duration-200 text-white" onclick="openDash()">Sign in</button>
+                <div class="text-center text-sm my-3">
+                    <p>Demo Credentials:</p>
+                    <p>Admin: admin@school.com / admin123</p>
+                    <p>Teacher: teacher@school.com / teacher123</p>
+                    <p>Student: student@school.com / student123</p>
+                </div>
+                <div class="text-green-800 text-center flex justify-evenly text-sm py-2">
+                    <p><span><i class="fa-solid fa-circle-check"></i></span> Face Recognitiion</p>
+                    <p><span><i class="fa-solid fa-circle-check"></i></span> Real-time Sync</p>
+                </div>
+                <div class="text-sm my-3">
+                    <p>Don't have an account?  <a id="btn" class="text-blue-900 underline hover:text-blue-500" onclick="signup()">Sign up</a></p>
+                </div>
+            </form>
+            
+            
+            <form id="signup" action="" class="flex flex-col space-y-1 absolute w-full h-auto left-[100%] overflow-hidden">
+                <label for="name" class="text-sm font-medium text-start pb-0.5 mt-2">Name</label>
+                <input type="text" placeholder="Enter your name" class="block border rounded-lg px-2 py-2 bg-blue-100 border-slate-400 hover:bg-blue-50" required>
+                <label for="email" class="text-sm font-medium text-start pb-0.5 mt-2">Email</label>
+                <input type="email" placeholder="Enter your email" class="block border rounded-lg px-2 py-2 bg-blue-100 border-slate-400 hover:bg-blue-50" required>
+                <label for="password" class="text-sm font-medium text-start pb-0.5 mt-2">Password</label>
+                <div class="relative">
+                    <input id="password" type="password" placeholder="Enter your password"
+                        class="block w-full border rounded-lg px-2 py-2 bg-blue-100 border-slate-400 hover:bg-blue-50 focus:bg-blue-50 pr-10" required>
+                    <span class="absolute right-3 top-3 cursor-pointer text-slate-600" onclick="togglePassword('password', this)">
+                        <i class="fa-solid fa-eye"></i>
+                    </span>
+                </div>
+                <label for="confirm_password" class="text-sm font-medium text-start pb-0.5 mt-2">Confirm Password</label>
+                <div class="relative">
+                    <input id="password" type="password" placeholder="Repeat password"
+                        class="block w-full border rounded-lg px-2 py-2 bg-blue-100 border-slate-400 hover:bg-blue-50 focus:bg-blue-50 pr-10" required>
+                    <span class="absolute right-3 top-3 cursor-pointer text-slate-600" onclick="togglePassword('password', this)">
+                        <i class="fa-solid fa-eye"></i>
+                    </span>
+                </div>
+
+                <div class="flex justify-between text-sm items-center my-2">
+                    <label class="flex items-center" for="">
+                        <input class="mr-2" type="checkbox">
+                        <span class="text-slate-800">I accept all terms & conditions</span>
+                    </label>
+                    <!-- <a class="text-blue-700 hover:underline" href="#">Forgot Password</a> -->
+                </div>
+                <button id="btn" type="submit" class="w-[100%] py-3 rounded-lg bg-gray-700 hover:bg-gray-800 font-medium transition duration-200 text-white">Sign up</button>
+                <!-- <div class="text-center text-sm my-3">
+                    <p>Demo Credentials:</p>
+                    <p>Admin: admin@school.com / admin123</p>
+                    <p>Teacher: teacher@school.com / teacher123</p>
+                    <p>Student: student@school.com / student123</p>
+                </div>
+                <div class="text-green-800 text-center flex justify-evenly text-sm py-2">
+                    <p><span><i class="fa-solid fa-circle-check"></i></span> Face Recognitiion</p>
+                    <p><span><i class="fa-solid fa-circle-check"></i></span> Real-time Sync</p>
+                </div>
+                <div class="text-sm my-3"> -->
+                <p>Already have an account?  <a class="text-blue-900 hover:underline hover:text-blue-500" onclick="signin()">sign in</a></p>
+            </div>
+            </form>
+            
+            </div>
+            
+        </div>
+    </div>
+    <script>
+        let x= document.getElementById("signin");
+        let y= document.getElementById("signup");
+        let btn= document.getElementById("btn");
+
+        function signup() {
+            x.style.left = "-100%";
+            y.style.left = "0"
+        }
+        function signin() {
+            x.style.left = "0";
+            y.style.left = "100%"
+        }
+        function openDash() {
+            window.location.href = "dashboard.html";    
+        }
+
+        function togglePassword(id, icon) {
+            const input = document.getElementById(id);
+            const isHidden = input.type === "password";
+            input.type = isHidden ? "text" : "password";
+            icon.innerHTML = isHidden ? '<i class="fa-solid fa-eye-slash"></i>' : '<i class="fa-solid fa-eye"></i>';
+        }
+
+    </script>
+</body>
+</html>
