@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Attendance Dashboard</title>
+  <!-- <link rel="stylesheet" href="style.css"> -->
+  <link rel="stylesheet" href="./output.css">
+</head>
+<body class="m-0 p-0 box-border font-sans bg-gradient-to-br from-blue-400 to-purple-600 min-h-screen text-[#333]">
+  <header class="flex sticky justify-between items-center z-10 top-0 py-[15px] pl-[25px] border-b-[1px] border-[#e0e0e0] bg-indigo-800 px-4">
+    <h1 class="flex items-center gap-2.5 text-2xl font-semibold text-amber-100"><i class="bg-[#3b82f6] text-amber-50 rounded-xl p-1.5">📘</i> Attendance Dashboard</h1>
+    <button class="btn btn-red bg-red-700 text-white border-none py-2.5 px-4 font-bold cursor-pointer rounded-xl hover:bg-green-700" onclick="logout()">Logout</button>
+  </header>
+
+  <main class="p-6 w-full sm:max-w-[70%] m-auto">
+    <section id="register">
+      <div class="form bg-slate-200 shadow-lg shadow-slate-700 rounded-[12px] p-5 mb-5">
+        <h2 class="mb-2.5 font-bold text-lg">Register New Student</h2>
+        <label for="email" class="text-sm font-medium text-start pb-0.5 mt-2 ml-1 text-purple-950 ">Student's Name</label>
+        <input id="name" type="text" placeholder="Enter student's Name" class="p-2 rounded-[8px] border border-[#ccc] w-full mb-3  hover:border-slate-500 bg-gradient-to-b from-white to-slate-300" />
+        <label for="email" class="text-sm font-medium text-start pb-0.5 mt-2 ml-1 text-purple-950 ">Roll No.</label>
+        <input id="roll" type="text" placeholder="Roll Number" class="p-2 rounded-[8px] border border-[#ccc] w-full mb-3  hover:border-slate-500 bg-gradient-to-b from-white to-slate-300" />
+        <label for="email" class="text-sm font-medium text-start pb-0.5 mt-2 ml-1 text-purple-950 ">Class</label>
+        <input id="className" type="text" placeholder="Class (e.g. 5A)" class="p-2 rounded-[8px] border border-[#ccc] w-full mb-3  hover:border-slate-500 bg-gradient-to-b from-white to-slate-300" />
+        <button class="btn p-1.5 px-2 bg-purple-950 rounded-lg text-slate-300 hover:bg-purple-900" onclick="addStudent()">Register</button>
+      </div>
+    </section>
+
+    <section id="dashboard" class="my-12">
+      <h2 class="p-1.5 bg-purple-800 max-w-fit my-3 text-amber-200 rounded-lg shadow shadow-slate-800">Your Classes</h2>
+      <div id="class-list"></div>
+    </section>
+
+    <section id="attendance" class="hidden">
+      <button class="btn btn-blue bg-blue-900 p-1.5 px-2 text-amber-200 rounded-lg shadow shadow-slate-700 hover:bg-blue-950 hover:text-white mb-12" onclick="goBack()">← Back</button>
+      <h2 id="class-title"></h2>
+      <table class="w-full border-collapse bg-white rounded-[12px] overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.08)]">
+        <thead>
+          <tr>
+            <th class="px-[10px] py-[12px] text-left border-b border-[#f0f0f0] font-semibold bg-cyan-950 text-amber-100">S.No</th>
+            <th class="px-[10px] py-[12px] text-left border-b border-[#f0f0f0] font-semibold bg-cyan-950 text-amber-100">Student Name</th>
+            <th class="px-[10px] py-[12px] text-left border-b border-[#f0f0f0] font-semibold bg-cyan-950 text-amber-100">Roll No</th>
+            <th class="px-[10px] py-[12px] text-left border-b border-[#f0f0f0] font-semibold bg-cyan-950 text-amber-100">Status</th>
+            <th class="px-[10px] py-[12px] text-left border-b border-[#f0f0f0] font-semibold bg-cyan-950 text-amber-100">%</th>
+            <th class="px-[10px] py-[12px] text-left border-b border-[#f0f0f0] font-semibold bg-cyan-950 text-amber-100">Delete</th>
+          </tr>
+        </thead>
+        <tbody id="attendance-body"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    const register = document.getElementById("register");
+    const dashboard = document.getElementById("dashboard");
+    const attendance = document.getElementById("attendance");
+    const classList = document.getElementById("class-list");
+    const attendanceBody = document.getElementById("attendance-body");
+    const classTitle = document.getElementById("class-title");
+
+    let students = JSON.parse(localStorage.getItem("students") || "[]");
+
+    function addStudent() {
+      const name = document.getElementById("name").value.trim();
+      const roll = document.getElementById("roll").value.trim();
+      const className = document.getElementById("className").value.trim().toUpperCase();
+
+      if (!name || !roll || !className) {
+        alert("Please fill all fields");
+        return;
+      }
+
+      const student = { id: Date.now(), name, roll, className, attendance: [] };
+      students.push(student);
+      localStorage.setItem("students", JSON.stringify(students));
+
+      document.getElementById("name").value = "";
+      document.getElementById("roll").value = "";
+      document.getElementById("className").value = "";
+
+      renderClasses();
+    }
+
+    function renderClasses() {
+      classList.innerHTML = "";
+      const classes = [...new Set(students.map(s => s.className))];
+
+      if (classes.length === 0) {
+        classList.innerHTML = "<p>No classes yet. Register students above.</p>";
+        return;
+      }
+
+      classes.forEach(cls => {
+        const count = students.filter(s => s.className === cls).length;
+        const card = document.createElement("div");
+        card.className = "class-card bg-white rounded-[12px] p-5 mb-[15px] shadow-[0_1px_3px_rgba(0,0,0,0.08)] cursor-pointer transition-transform ease-in-out duration-100 relative hover:translate-y-[-2px]";
+        card.innerHTML = `
+          <div class="class-title font-semibold text-[16px]">Class ${cls}</div>
+          <div class="class-subject text-gray-600 text-[14px] mt-1">Subject TBD</div>
+          <div class="class-time text-[#555] text-[14px] mt-2">⏰ Time TBD</div>
+          <div class="class-students absolute right-[20px] top-[20px] bg-[#e0ecff] text-[#2563eb] font-medium rounded-[6px] px-2 py-1 text-[13px]">${count} students</div>
+          <button class="delete-btn bg-none border-none text-red-500 cursor-pointer text-[16px]" onclick="deleteClass('${cls}')">🗑 Delete Class</button>
+        `;
+        card.onclick = (e) => {
+          if (e.target.tagName !== "BUTTON") openClass(cls);
+        };
+        classList.appendChild(card);
+      });
+    }
+
+    function openClass(cls) {
+      dashboard.style.display = "none";
+      register.style.display = "none";
+      attendance.classList.remove("hidden");
+      classTitle.innerHTML = `<div class="mb-2 mx-2 bg-white/30 backdrop-blur-md p-3 rounded-lg shadow-lg shadow-slate-600 max-w-fit font-semibold text-purple-950">Class ${cls} - Attandance</div>`;
+      renderAttendance(cls);
+    }
+
+    function goBack() {
+      attendance.classList.add("hidden");
+      register.style.display = "block";
+      dashboard.style.display = "block";
+    }
+
+    function renderAttendance(cls) {
+      const list = students.filter(s => s.className === cls);
+      attendanceBody.innerHTML = "";
+      list.forEach((s, i) => {
+        const percent = Math.round((s.attendance.filter(x => x === 1).length / (s.attendance.length || 1)) * 100);
+        const color = percent >= 85 ? "high" : percent >= 70 ? "mid" : "low";
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td class="px-[10px] py-[12px] text-left border-b border-[#f0f0f0]">${i + 1}</td>
+          <td class="px-[10px] py-[12px] text-left border-b border-[#f0f0f0]">${s.name}</td>
+          <td class="px-[10px] py-[12px] text-left border-b border-[#f0f0f0]">${s.roll}</td>
+          <td class="px-[10px] py-[12px] text-left border-b border-[#f0f0f0]">
+            <select onchange="markAttendance(${s.id}, this.value)">
+              <option value="">Select</option>
+              <option value="1">Present</option>
+              <option value="0">Absent</option>
+            </select>
+          </td>
+          <td class="px-[10px] py-[12px] text-left border-b border-[#f0f0f0]"><span class="percent ${color}">${percent}%</span></td>
+          <td class="px-[10px] py-[12px] text-left border-b border-[#f0f0f0]"><button class="delete-btn" onclick="deleteStudent(${s.id}, '${cls}')">🗑</button></td>
+        `;
+        attendanceBody.appendChild(row);
+      });
+    }
+
+    function markAttendance(id, value) {
+      const student = students.find(s => s.id === id);
+      if (!student) return;
+      student.attendance.push(Number(value));
+      localStorage.setItem("students", JSON.stringify(students));
+      renderAttendance(student.className);
+    }
+
+    function deleteStudent(id, cls) {
+      students = students.filter(s => s.id !== id);
+      localStorage.setItem("students", JSON.stringify(students));
+      renderAttendance(cls);
+      renderClasses();
+    }
+
+    function deleteClass(cls) {
+      if (!confirm(`Delete entire class ${cls}? This will remove all students.`)) return;
+      students = students.filter(s => s.className !== cls);
+      localStorage.setItem("students", JSON.stringify(students));
+      renderClasses();
+    }
+
+    function logout() {
+      alert("Logout logic here (connect backend later).");
+    }
+
+    renderClasses();
+  </script>
+</body>
+</html>
